@@ -1,8 +1,10 @@
+import functools
+import json
+import shutil
 from pathlib import Path
 from urllib.parse import urlparse
-import functools
-import shutil
 
+import pandas as pd
 import requests
 from tqdm import tqdm
 
@@ -25,7 +27,9 @@ def get_with_progress_bar(url):
     dest_file.parent.mkdir(exist_ok=True, parents=True)
     response.raw.read = functools.partial(response.raw.read, decode_content=True)
 
-    with tqdm.wrapattr(response.raw, "read", total=file_size, desc=desc) as r_raw:
+    with tqdm.wrapattr(
+        response.raw, "read", total=file_size, desc=desc, leave=False
+    ) as r_raw:
         with dest_file.open("wb") as f:
             shutil.copyfileobj(r_raw, f)
 
@@ -41,11 +45,13 @@ def main():
     botany = [i for i in top_level_index if "botany" in i][0]
 
     botany_index = get_values(botany)
-    botany_files = []
-    for i in botany_index:
+    botany_metadata = []
+    for i in tqdm(botany_index):
         json_lines = get_values(i)
-        botany_files.extend(json_lines)
-        print(len(json_lines))
+        botany_metadata.extend([json.loads(j) for j in json_lines])
+
+    df = pd.DataFrame.from_dict(botany_metadata)
+    print(df.describe())
 
 
 if __name__ == "__main__":
