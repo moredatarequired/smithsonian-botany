@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Demo retrieving the metadata for the Smithsonian open dataset"
 authors = ["Hugh Wimberly <hugh.wimberly@gmail.com>"]
 readme = "README.md"
-packages = [{include = "smithsonian_botany_metadata"}]
+packages = [{include = "webget"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -12,6 +12,10 @@ pandas = "^1.5.1"
 requests = "^2.28.1"
 tqdm = "^4.64.1"
 fastparquet = "^2022.11.0"
+cramjam = "^2.6.2"
+jsonlines = "^3.1.0"
+fastavro = "^1.7.0"
+humanize = "^4.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
